@@ -20,7 +20,7 @@ if (-Not (Test-Path $ToolDir)) {
 
 # Remove existing symlink if it exists
 if (Test-Path $SymlinkPath) {
-    Remove-Item $SymlinkPath
+    Remove-Item $SymlinkPath -Recurse -Force
 }
 
 
