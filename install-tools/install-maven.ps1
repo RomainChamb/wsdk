@@ -47,6 +47,9 @@ if ($userPath -notlike "*$env:M2_HOME*") {
     Write-Host "M2_HOME already in PATH."
 }
 
+# Reload environment variables in current session
+$env:Path = [Environment]::GetEnvironmentVariable("Path", "User")
+
 Write-Host "Environment variables set:"
 Write-Host "MAVEN_HOME = $env:MAVEN_HOME"
 Write-Host "M2_HOME = $env:M2_HOME"
