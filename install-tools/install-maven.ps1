@@ -32,7 +32,7 @@ Write-Host "Maven version $Version installed and linked successfully."
 $env:MAVEN_HOME = $SymlinkPath
 $env:M2_HOME = Join-Path $SymlinkPath "bin"
 
-[Environment]::SetEnvironmentVariable("MAVEN_HOME", $ToolDir, "User")
+[Environment]::SetEnvironmentVariable("MAVEN_HOME", $env:MAVEN_HOME, "User")
 [Environment]::SetEnvironmentVariable("M2_HOME", $env:M2_HOME, "User")
 
 Write-Host "Environment variables set:"
