@@ -8,6 +8,5 @@ Currently supported :
 
 How to install :
 ```powershell
-
-curl -L https://raw.githubusercontent.com/RomainChamb/wsdk/main/wsdk.ps1 | powershell -NoProfile -ExecutionPolicy Bypass
+irm https://raw.githubusercontent.com/RomainChamb/wsdk/main/install.ps1 | iex
 ```
