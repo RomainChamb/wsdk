@@ -26,7 +26,7 @@ function Switch-Version {
 
     $ToolBase = Join-Path $Base "tools\$Tool"
     $VersionDir = Join-Path $ToolBase "versions"
-    $TargetPath = Join-Path $VersionDir "$Tool-$VersionDir"
+    $TargetPath = Join-Path $VersionDir $Version
     $ToolSymlinkPath = Join-Path $CurrentDir $Tool
 
     if(-Not (Test-Path $TargetPath)) {
@@ -38,7 +38,7 @@ function Switch-Version {
         Remove-Item $ToolSymlinkPath
     }
 
-    New-Item -ItemType SymbolicLink -Path $ToolSymlinkPath -Target $TargetPath
+    cmd /c mklink /J "$ToolSymlinkPath" "$TargetPath"
     Write-Host "Switched $Tool to version $Version"
 }
 
