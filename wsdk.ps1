@@ -99,6 +99,19 @@ switch ($Command.ToLower()) {
             Switch-Version -Tool $Tool -Version $Version
         }
     }
+    "install" {
+
+        if (-not $Tool -or -not $Version) {
+            Write-Error "Please specify a tool and version. Example: wsdk install maven 3.9.5"
+        } else {
+            $InstallScript = Join-Path $Base "install-tools\\install-$Tool.ps1"
+            if (Test-Path $InstallScript) {
+                & $InstallScript -Version $Version
+            } else {
+                Write-Error "Installer for '$Tool' not found at $InstallScript"
+            }
+        }
+    }
     "update" {
         Update-Wsdk
     }
