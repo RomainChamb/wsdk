@@ -35,6 +35,18 @@ $env:M2_HOME = Join-Path $SymlinkPath "bin"
 [Environment]::SetEnvironmentVariable("MAVEN_HOME", $env:MAVEN_HOME, "User")
 [Environment]::SetEnvironmentVariable("M2_HOME", $env:M2_HOME, "User")
 
+
+# Add M2_HOME to PATH if not already present
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if ($userPath -notlike "*$env:M2_HOME*") {
+    $newPath = "$userPath;$env:M2_HOME"
+    [Environment]::SetEnvironmentVariable("Path", $newPath, "User")
+    $env:Path = $newPath
+    Write-Host "M2_HOME added to PATH."
+} else {
+    Write-Host "M2_HOME already in PATH."
+}
+
 Write-Host "Environment variables set:"
 Write-Host "MAVEN_HOME = $env:MAVEN_HOME"
 Write-Host "M2_HOME = $env:M2_HOME"
