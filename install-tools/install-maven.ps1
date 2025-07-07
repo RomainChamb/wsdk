@@ -1,0 +1,41 @@
+# Define the updated install-maven.ps1 script content
+param(
+    [Parameter(Mandatory = $true)]
+    [string]$Version
+)
+
+$HomeDir = [Environment]::GetFolderPath("UserProfile")
+$Base = Join-Path $HomeDir ".wsdk"
+$ToolDir = Join-Path $Base "tools\\maven\\versions\\$Version"
+$CurrentDir = Join-Path $Base "current"
+$SymlinkPath = Join-Path $CurrentDir "maven"
+
+# Create the version directory if it doesn't exist
+if (-Not (Test-Path $ToolDir)) {
+    New-Item -ItemType Directory -Force -Path $ToolDir | Out-Null
+    Write-Host "Created directory: $ToolDir"
+} else {
+    Write-Host "Directory already exists: $ToolDir"
+}
+
+# Remove existing symlink if it exists
+if (Test-Path $SymlinkPath) {
+    Remove-Item $SymlinkPath
+}
+
+# Create symbolic link to the specified version
+New-Item -ItemType SymbolicLink -Path $SymlinkPath -Target $ToolDir
+Write-Host "Maven version $Version installed and linked successfully."
+
+# Set environment variables
+$env:MAVEN_HOME = $SymlinkPath
+$env:M2_HOME = Join-Path $SymlinkPath "bin"
+
+[Environment]::SetEnvironmentVariable("MAVEN_HOME", $ToolDir, "User")
+[Environment]::SetEnvironmentVariable("M2_HOME", $env:M2_HOME, "User")
+
+Write-Host "Environment variables set:"
+Write-Host "MAVEN_HOME = $env:MAVEN_HOME"
+Write-Host "M2_HOME = $env:M2_HOME"
+
+
