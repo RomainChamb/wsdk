@@ -17,7 +17,7 @@ wsdk install maven <version>
 ```
 It will create .wsdk/tools/maven/versions/<version>
 
-In this folder extract the content of the tools version that you have previously download.
+In this folder extract the content of the tools version that you have previously download on the maven website.
 
 Check that the maven version is now up to date by running
 ```powershell
