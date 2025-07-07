@@ -100,7 +100,6 @@ switch ($Command.ToLower()) {
         }
     }
     "install" {
-
         if (-not $Tool -or -not $Version) {
             Write-Error "Please specify a tool and version. Example: wsdk install maven 3.9.5"
         } else {
