@@ -23,8 +23,9 @@ if (Test-Path $SymlinkPath) {
     Remove-Item $SymlinkPath
 }
 
-# Create symbolic link to the specified version
-New-Item -ItemType SymbolicLink -Path $SymlinkPath -Target $ToolDir
+
+# Create directory junction
+cmd /c mklink /J "$SymlinkPath" "$ToolDir"
 Write-Host "Maven version $Version installed and linked successfully."
 
 # Set environment variables
