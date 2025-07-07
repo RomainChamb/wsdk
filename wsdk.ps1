@@ -35,7 +35,7 @@ function Switch-Version {
     }
 
     if(Test-Path $ToolSymlinkPath) {
-        Remove-Item $ToolSymlinkPath
+        Remove-Item $ToolSymlinkPath -Recurse -Force
     }
 
     cmd /c mklink /J "$ToolSymlinkPath" "$TargetPath"
