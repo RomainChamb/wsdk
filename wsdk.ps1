@@ -85,8 +85,7 @@ switch ($Command.ToLower()) {
                 Write-Host "No versions found for $Tool"
                 return
             }
-            Get-ChildItem -Directory $VersionDir | ForEach-Object
-            {
+            Get-ChildItem -Directory $VersionDir | ForEach-Object {
                 $isCurrent = (Test-Path $ToolSymlinkPath) -and ((Get-Item $ToolSymlinkPath).Target -eq $_.FullName)
                 Write-Host "$($_.Name) $(if ($isCurrent) { '(current)' })"
             }
