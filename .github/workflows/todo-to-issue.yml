@@ -2,7 +2,7 @@ name: Create Issues from TODOs
 
 on:
   push:
-    branches: [develop]
+    branches: [main]
   workflow_dispatch:
     inputs:
       MANUAL_COMMIT_REF:
