@@ -45,5 +45,10 @@ if ($envPath -notlike "*$WsdkDir*") {
 # Reload environment variables in current session
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "User")
 
+# Create VERSiON.txt file
+$VersionFile = Join-Path $Base "VERSION.txt"
+Set-Content -Path $VersionFile -Value $Tag
+
+
 Write-Host "wsdk version $Tag installed successfully in $WsdkDir"
 Write-Host "You can now run wsdk from this terminal. Restart other terminals to apply changes globally."
