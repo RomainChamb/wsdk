@@ -99,7 +99,6 @@ switch ($Command.ToLower()) {
         }
     }
     "install" {
-        #TODO: Install maven from maven archive site https://archive.apache.org/dist/maven/
         if (-not $Tool -or -not $Version) {
             Write-Error "Please specify a tool and version. Example: wsdk install maven 3.9.5"
         } else {
