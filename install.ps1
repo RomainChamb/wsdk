@@ -46,7 +46,7 @@ if ($envPath -notlike "*$WsdkDir*") {
 $env:Path = [Environment]::GetEnvironmentVariable("Path", "User")
 
 # Create VERSiON.txt file
-$VersionFile = Join-Path $Base "VERSION.txt"
+$VersionFile = Join-Path $WsdkDir "VERSION.txt"
 Set-Content -Path $VersionFile -Value $Tag
 
 
