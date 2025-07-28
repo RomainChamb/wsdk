@@ -4,19 +4,76 @@ param(
     [string]$Version
 )
 
+function download_maven_from_central_repository {
+    param(
+        [string]$Version,
+        [string]$ToolDir,
+        [string]$ExtractDir
+    )
+
+    # Extract maven major version
+    $majorVersion = $Version.Split('.')[0]
+
+    # Construct base URL
+    $baseUrl = "https://archive.apache.org/dist/maven/maven-$majorVersion/$Version/binaries"
+    $fileName = "apache-maven-$Version-bin.zip"
+    $downloadUrl = "$baseUrl/$fileName"
+
+    # Create the version directory if it doesn't exist
+    if (-Not (Test-Path $ExtractDir)) {
+        New-Item -ItemType Directory -Force -Path $ExtractDir | Out-Null
+        Write-Host "Created directory: $ExtractDir"
+    } else {
+        Write-Host "Directory already exists: $ExtractDir"
+    }
+
+    # Download the file
+    $zipPath = Join-Path -Path $ExtractDir -ChildPath $fileName
+    Write-Host "Downloading $downloadUrl..."
+    Invoke-WebRequest -Uri $downloadUrl -OutFile $zipPath
+
+    # Temporary extraction folder
+    $tempExtractDir = Join-Path -Path $ExtractDir -ChildPath "temp_extract_$Version"
+    if (Test-Path $tempExtractDir) {
+        Remove-Item $tempExtractDir -Recurse -Force
+    }
+    New-Item -ItemType Directory -Path $tempExtractDir | Out-Null
+
+    # Extract the archive
+    Write-Host "Extracting to $ExtractDir..."
+    Expand-Archive -Path $zipPath -DestinationPath $tempExtractDir -Force
+
+    # Find the extracted apache-maven-* folder
+    $extractedRoot = Get-ChildItem -Path $tempExtractDir | Where-Object { $_.PSIsContainer } | Select-Object -First 1
+
+    if ($extractedRoot) {
+        if (-Not (Test-Path $ToolDir)) {
+            New-Item -ItemType Directory -Force -Path $ToolDir | Out-Null
+            Write-Host "Created directory: $ToolDir"
+        }
+
+        Get-ChildItem -Path $extractedRoot.FullName | ForEach-Object {
+            Move-Item -Path $_.FullName -Destination $ToolDir -Force
+        }
+    } else {
+        Write-Host "Error: Could not find extracted Maven folder."
+    }
+
+    # Cleanup
+    Remove-Item $zipPath -Force
+    Remove-Item $tempExtractDir -Recurse -Force
+
+    Write-Host "Maven $Version has been downloaded and extracted to '$ToolDir'"
+}
+
 $HomeDir = [Environment]::GetFolderPath("UserProfile")
 $Base = Join-Path $HomeDir ".wsdk"
+$ExtractDir = Join-Path $Base "tools\\maven\\versions"
 $ToolDir = Join-Path $Base "tools\\maven\\versions\\$Version"
 $CurrentDir = Join-Path $Base "current"
 $SymlinkPath = Join-Path $CurrentDir "maven"
 
-# Create the version directory if it doesn't exist
-if (-Not (Test-Path $ToolDir)) {
-    New-Item -ItemType Directory -Force -Path $ToolDir | Out-Null
-    Write-Host "Created directory: $ToolDir"
-} else {
-    Write-Host "Directory already exists: $ToolDir"
-}
+download_maven_from_central_repository -Version $Version -ToolDir $ToolDir -ExtractDir $ExtractDir
 
 # Remove existing symlink if it exists
 if (Test-Path $SymlinkPath) {
