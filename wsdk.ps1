@@ -14,6 +14,7 @@ function Show-Help {
     Write-Host " wsdk list <tool>             # List available versions for a tool (e.g, maven, java, node)"
     Write-Host " wsdk use <tool> <version>    # Switch to a specific version of a tool"
     Write-Host " wsdk update                  # Update the entire wsdk from github"
+    Write-Host " version                      # Show the currently installed wsdk version"
     Write-Host " wsdk help                    # Show this help message"
 
 }
@@ -73,12 +74,26 @@ function Update-Wsdk {
         Write-Host "Replacing local .wsdk contents..."
         Copy-Item -Path (Join-Path $ExtractedRoot "*") -Destination $Base -Recurse -Force
 
+        # Update VERSION.txt file
+        $VersionFile = Join-Path $Base "VERSION.txt"
+        Set-Content -Path $VersionFile -Value $Tag
+
         Write-Host "Update to version $Tag complete."
     } catch {
         Write-Error "Update failed: $_"
     } finally {
         if (Test-Path $TempZip) { Remove-Item $TempZip -Force }
         if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
+    }
+}
+
+function Version {
+    $VersionFile = Join-Path $Base "VERSION.txt"
+    if (Test-Path $VersionFile) {
+        $installedVersion = Get-Content $VersionFile
+        Write-Host "wsdk version: $installedVersion"
+    } else {
+        Write-Host "wsdk version information not found."
     }
 }
 
@@ -122,6 +137,9 @@ switch ($Command.ToLower()) {
     }
     "update" {
         Update-Wsdk
+    }
+    "version" {
+        Version
     }
     "help" {
         Show-Help
