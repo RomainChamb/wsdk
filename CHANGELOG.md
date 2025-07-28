@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ---
 
+## [v1.1.0] - 2025-07-28
+### Added
+- Tag-Based update support in `Update-Wsdk` function
+
 ## [v1.0.0] - 2025-07-28
 ### Added
 - Initial release of `wsdk`
