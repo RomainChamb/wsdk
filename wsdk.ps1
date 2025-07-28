@@ -42,13 +42,24 @@ function Switch-Version {
     Write-Host "Switched $Tool to version $Version"
 }
 
+
 function Update-Wsdk {
-    $RepoZipUrl = "https://github.com/RomainChamb/wsdk/archive/refs/heads/main.zip"
+    param(
+        [string]$Tag = "latest"
+    )
+
+    $Base = Join-Path ([Environment]::GetFolderPath("UserProfile")) ".wsdk"
     $TempZip = Join-Path $env:TEMP "wsdk_update.zip"
     $ExtractPath = Join-Path $env:TEMP "wsdk_update"
 
     try {
-        Write-Host "Downloading latest wsdk repository..."
+        if ($Tag -eq "latest") {
+            $apiUrl = "https://api.github.com/repos/RomainChamb/wsdk/releases/latest"
+            $Tag = (Invoke-RestMethod -Uri $apiUrl).tag_name
+        }
+
+        $RepoZipUrl = "https://github.com/RomainChamb/wsdk/archive/refs/tags/$Tag.zip"
+        Write-Host "Downloading wsdk version $Tag..."
         Invoke-WebRequest -Uri $RepoZipUrl -OutFile $TempZip
 
         if (Test-Path $ExtractPath) {
@@ -57,12 +68,12 @@ function Update-Wsdk {
 
         Expand-Archive -Path $TempZip -DestinationPath $ExtractPath
 
-        $ExtractedRoot = Join-Path $ExtractPath "wsdk-main"
+        $ExtractedRoot = Join-Path $ExtractPath "wsdk-$($Tag.TrimStart('v'))"
 
         Write-Host "Replacing local .wsdk contents..."
         Copy-Item -Path (Join-Path $ExtractedRoot "*") -Destination $Base -Recurse -Force
 
-        Write-Host "Update complete."
+        Write-Host "Update to version $Tag complete."
     } catch {
         Write-Error "Update failed: $_"
     } finally {
@@ -70,7 +81,6 @@ function Update-Wsdk {
         if (Test-Path $ExtractPath) { Remove-Item $ExtractPath -Recurse -Force }
     }
 }
-
 
 switch ($Command.ToLower()) {
     "list" {
