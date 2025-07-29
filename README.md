@@ -1,7 +1,14 @@
+<p align="center">
+  <img src="assets/wsdk_logo.png" alt="wsdk logo" width="300"/>
+</p>
+
+
 # WSDK - Windows SDK Manager
 
+![Version](https://img.shields.io/github/v/release/RomainChamb/wsdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1+-blue.svg)](https://github.com/PowerShell/PowerShell)
+
 
 WSDK is a lightweight, PowerShell-based SDK manager for Windows that helps developers manage multiple versions of development tools. It allows you to easily switch between different versions of tools without conflicts. No administrative privileges are required for installation or usage.
 
